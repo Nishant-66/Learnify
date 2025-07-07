@@ -29,3 +29,16 @@ const bcrypt=require('bcrypt');
     }
 
 }
+const logout=async function(req,res){
+    res.cookie("token",null,{
+        expires:new Date(Date.now())
+    });
+    res.send("Logout Successful!!");
+}
+
+module.exports={
+    signup,
+    login,
+    logout
+};
+
