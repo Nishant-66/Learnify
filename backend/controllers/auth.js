@@ -2,7 +2,7 @@ const User=require('../models/user');
 const bcrypt=require('bcrypt');
  const signup=async(req,res)=>{
     try{
-        const {firstName,lastName,emailId,password}=req.body;
+        const {firstName,lastName,emailId,password,role}=req.body;
         const hashedpassword=await bcrypt.hash(password,10);
 
         const user=new User({
@@ -10,6 +10,7 @@ const bcrypt=require('bcrypt');
             lastName,
             emailId,
             password:hashedpassword,
+            role
         })
          
         const savedUser=await user.save();

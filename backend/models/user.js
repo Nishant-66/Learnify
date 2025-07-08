@@ -31,6 +31,11 @@ const userSchema=new mongoose.Schema({
             }
         }
     },
+    role:{
+        type: String,
+        enum: ['Student', 'Educator'],
+        default: 'Student'
+    }
      
 },{
     timestamps:true,

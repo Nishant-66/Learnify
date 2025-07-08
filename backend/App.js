@@ -8,7 +8,9 @@ app.use(cookieParser());
 app.use(express.json());
 const port=process.env.PORT||3000;
 const authRouter = require("./routes/auth");
+const courseRouter=require('./routes/course');
 app.use("/", authRouter);
+app.use("/", courseRouter);
 mongoDB().then(()=>{
 console.log("Datbase established ...");
 app.listen(port,()=>{
