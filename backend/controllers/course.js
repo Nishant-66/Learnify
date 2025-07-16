@@ -1,8 +1,15 @@
 const Course = require("../models/course");
-
+const User=require('../models/user')
+const EnrolledCourse=require('../models/enrolledCourse');
+const CourseChapterMap=require('../models/courseChapterMap');
 const addCourse=async(req,res)=>{
     try{
+    const user=req.user;
     const{title,description,thumbnail,price}=req.body;
+    if (!title || !description || !thumbnail || !price) {
+    return res.status(400).json({ message: "All fields are required" });
+     }
+
     const newCourse= new Course({
         title,
         description,
@@ -11,9 +18,10 @@ const addCourse=async(req,res)=>{
     })
 
     await newCourse.save();
+    const courses=await EnrolledCourse.create({userId:user,courseId:newCourse._id});
     res.json({
         message:"Course Added succesfully",
-        data:newCourse,
+        data:newCourse,courses,
     })
 
     }
@@ -75,6 +83,8 @@ const deleteCourse=async(req,res)=>{
         if(!singleCourses) throw new Error("Course not found ");
         
         const deletedCourse=await Course.findByIdAndDelete(id);
+            await CourseChapterMap.deleteMany({courseId: id});
+            await EnrolledCourse.deleteMany({courseId: id});
         res.json({
             message:"Course Deleted successfully",
         
@@ -87,13 +97,28 @@ const deleteCourse=async(req,res)=>{
     }
 }
 
+const getEnrolledcourse=async(req,res)=>{
+    try{
+        const user=req.user;
+        const courses= await EnrolledCourse.find({ userId: user }).populate("courseId") ;
+        res.json({
+            message:"All Enrolled courses of user",
+            data:courses,
+        });
+
+    }
+    catch(err){
+         res.status(400).send("ERROR : " + err.message);
+    }
+
+}
+
 module.exports={
     addCourse,
     getAllCourse,
     getCourseByID,
     updateCourse,
-    deleteCourse
-
-
+    deleteCourse,
+    getEnrolledcourse
 
 }

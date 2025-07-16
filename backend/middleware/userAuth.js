@@ -7,7 +7,7 @@ const userAuth=async(req,res,next)=>{
         throw new Error("Please login ");
     }
     const decodedObj=jwt.verify(token,process.env.secret);
-    console.log(decodedObj);
+ 
     const {_id}=decodedObj;
     const user= await User.findById(_id);
     if(!user){

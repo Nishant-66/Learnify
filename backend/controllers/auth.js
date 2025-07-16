@@ -1,10 +1,15 @@
+const { removeListener } = require('../models/lecture');
 const User=require('../models/user');
 const bcrypt=require('bcrypt');
  const signup=async(req,res)=>{
     try{
         const {firstName,lastName,emailId,password,role}=req.body;
+        if (!firstName || !lastName || !emailId || !password || !role) {
+    return res.status(400).json({ message: "All fields are required" });
+     }
         const hashedpassword=await bcrypt.hash(password,10);
-
+        const existingUser=await User.findOne({emailId:emailId});
+        if(existingUser) throw new Error('User with this emailId already exist.');
         const user=new User({
             firstName,
             lastName,
@@ -37,7 +42,7 @@ const login=async(req,res)=>{
         if(!user){
             throw new Error("Invalid Credentials");
         }
-        const isPasswordValid=user.validatePassword(password);
+        const isPasswordValid=await user.validatePassword(password);
         if(!isPasswordValid) throw new Error("Invalid Credentials")
         const token=user.getJwt();
         res.cookie("token",token,{

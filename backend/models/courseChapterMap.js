@@ -1,5 +1,5 @@
 const mongoose=require('mongoose');
-const courseChapterMap=new mongoose.Schema({
+const courseChapterMapSchema=new mongoose.Schema({
     courseId:{
         type:mongoose.Schema.Types.ObjectId,
         ref:'Course',
@@ -14,4 +14,4 @@ const courseChapterMap=new mongoose.Schema({
     timestamps:true
 })
 courseChapterMapSchema.index({ courseId: 1, chapterId: 1 }, { unique: true });
-module.exports=mongoose.model('CourseChapterMap',courseChapterMap);
+module.exports=mongoose.model('CourseChapterMap',courseChapterMapSchema);
