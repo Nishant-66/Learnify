@@ -11,10 +11,12 @@ import DashBoard from './components/DashBoard';
 import MyCourses from './components/MyCourses';
 import Profile from './components/Profile';
 import ChangePassword from './components/ChangePassword';
+import { Provider } from "react-redux";
+import appStore from "./utils/appStore";
 
 function App() {
   return (
-    
+      <Provider store={appStore}>
       <BrowserRouter>
         <Routes>
           <Route path="/" element={<Home />}>
@@ -31,6 +33,7 @@ function App() {
           </Route>
         </Routes>
       </BrowserRouter>
+      </Provider>
     
   );
 }
